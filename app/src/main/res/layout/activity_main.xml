@@ -7,19 +7,23 @@
     tools:context=".MainActivity"
     android:orientation="vertical">
 
+    <ImageView
+        android:id="@+id/btnSpeak"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_margin="16dp"
+        android:onClick="getSpeechInput"
+        android:src="@drawable/ic_mic"/>
     <TextView
-        android:id="@+id/main_textview_greeting"
+        android:id="@+id/txvResult"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="ToneNote" />
-
-    <EditText
-        android:id="@+id/main_edittext_name"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="écrivez ce que vous voulez" />
-    />
-
+        android:layout_marginTop="100dp"
+        android:textColor="#000"
+        android:textSize="26sp"
+        android:layout_gravity="center_horizontal"
+        android:textStyle="normal"/>
     <Button
         android:id="@+id/main_button_play"
         android:layout_width="wrap_content"

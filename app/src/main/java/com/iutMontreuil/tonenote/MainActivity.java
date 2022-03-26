@@ -4,28 +4,32 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.speech.RecognizerIntent;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import java.util.ArrayList;
+import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
 
-    private TextView mGreetingTextView;
-    private EditText mNameEditText;
-    private Button mPlayButton;
+    public static TextView txvResult;
+    public static Button mPlayButton;
+    private String test = "t";
+    private String mdp = "salut";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mGreetingTextView = findViewById(R.id.main_textview_greeting);
-        mNameEditText = findViewById(R.id.main_edittext_name);
+        txvResult = findViewById(R.id.txvResult);
         mPlayButton = findViewById(R.id.main_button_play);
         mPlayButton.setEnabled(false);
-        mNameEditText.addTextChangedListener(new TextWatcher() {
+        txvResult.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -38,7 +42,10 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                mPlayButton.setEnabled(!s.toString().isEmpty());
+                test = txvResult.getText().toString();
+                if (test.equalsIgnoreCase(mdp)) {
+                    mPlayButton.setEnabled(!s.toString().isEmpty());
+                }
             }
         });
 
@@ -51,5 +58,33 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+
+    public void getSpeechInput(View view) {
+
+        Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
+
+        if (intent.resolveActivity(getPackageManager()) != null) {
+            startActivityForResult(intent, 10);
+        } else {
+            Toast.makeText(this, "Your Device Don't Support Speech Input", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        switch (requestCode) {
+            case 10:
+                if (resultCode == RESULT_OK && data != null) {
+                    ArrayList<String> result = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+                    txvResult.setText(result.get(0));
+                }
+                break;
+        }
     }
 }
